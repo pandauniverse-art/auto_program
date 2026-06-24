@@ -1,1 +1,586 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 스토리보드 스튜디오</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap');
 
+    :root {
+      --bg: #0e0e10;
+      --surface: #18181c;
+      --surface2: #222228;
+      --border: #2e2e38;
+      --accent: #7B68EE;
+      --accent2: #a78bfa;
+      --text: #e8e8f0;
+      --text2: #888899;
+      --text3: #555566;
+      --success: #34d399;
+      --error: #f87171;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* 헤더 */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+    }
+    .logo {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    header h1 { font-size: 16px; font-weight: 500; }
+    header span { font-size: 12px; color: var(--text2); margin-left: 4px; }
+
+    /* 메인 레이아웃 */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* 입력 섹션 */
+    .input-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+    .input-section h2 {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .input-section p {
+      font-size: 12px;
+      color: var(--text2);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      padding: 14px 16px;
+      resize: vertical;
+      min-height: 120px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea:focus { border-color: var(--accent); }
+    textarea::placeholder { color: var(--text3); }
+
+    /* 옵션 행 */
+    .options-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .opt-group { display: flex; align-items: center; gap: 8px; }
+    .opt-group label { font-size: 12px; color: var(--text2); }
+    select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 12px;
+      padding: 7px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* 예시 태그 */
+    .examples {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .ex-tag {
+      font-size: 11px;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.15s;
+      background: none;
+    }
+    .ex-tag:hover { border-color: var(--accent); color: var(--accent2); }
+
+    /* 생성 버튼 */
+    .btn-generate {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .btn-generate:hover { opacity: 0.88; }
+    .btn-generate:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* 로딩 스피너 */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* 결과 섹션 */
+    #resultsSection { display: none; }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .results-header h2 { font-size: 15px; font-weight: 500; }
+
+    .btn-all {
+      padding: 8px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; align-items: center; gap: 6px;
+      transition: border-color 0.15s;
+    }
+    .btn-all:hover { border-color: var(--accent); }
+    .btn-all:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* 스토리보드 개요 */
+    .storyboard-overview {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .storyboard-overview h3 {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent2);
+      margin-bottom: 8px;
+    }
+    .storyboard-overview p {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* 씬 그리드 */
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    /* 씬 카드 */
+    .scene-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .scene-card:hover { border-color: var(--border); }
+
+    .scene-card-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .scene-num {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 100px;
+      background: rgba(123, 104, 238, 0.15);
+      color: var(--accent2);
+      letter-spacing: 0.05em;
+    }
+    .scene-title {
+      font-size: 13px;
+      font-weight: 500;
+      flex: 1;
+    }
+    .scene-subtitle {
+      font-size: 11px;
+      color: var(--text2);
+    }
+
+    .scene-card-body { padding: 14px 16px; }
+
+    .prompt-box {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text2);
+      background: var(--surface2);
+      border-radius: 6px;
+      padding: 10px 12px;
+      line-height: 1.6;
+      word-break: break-all;
+      margin-bottom: 12px;
+    }
+
+    /* 이미지 영역 */
+    .image-area { margin-top: 4px; }
+
+    .btn-img {
+      width: 100%;
+      padding: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text2);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-img:hover { border-color: var(--accent); color: var(--accent2); }
+    .btn-img:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-img.done { color: var(--success); border-color: rgba(52, 211, 153, 0.3); }
+
+    .generated-image {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .img-download {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .btn-download {
+      font-size: 11px;
+      padding: 5px 12px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text2);
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.15s;
+    }
+    .btn-download:hover { border-color: var(--accent); color: var(--accent2); }
+
+    .error-msg {
+      font-size: 11px;
+      color: var(--error);
+      background: rgba(248, 113, 113, 0.08);
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* 상태 메시지 */
+    .status-bar {
+      font-size: 12px;
+      color: var(--text2);
+      padding: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 반응형 */
+    @media (max-width: 600px) {
+      .container { padding: 24px 16px; }
+      header { padding: 14px 16px; }
+      .input-section { padding: 20px 16px; }
+      .scene-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🎬</div>
+  <h1>AI 스토리보드 스튜디오</h1>
+  <span>기획 의도 → 스토리보드 → 이미지 자동 생성</span>
+</header>
+
+<div class="container">
+
+  <!-- 입력 섹션 -->
+  <div class="input-section">
+    <h2>연출 기획 입력</h2>
+    <p>기획 의도나 방향성을 자유롭게 입력하세요. AI가 스토리보드를 구성하고 각 씬의 이미지를 자동으로 생성합니다.</p>
+
+    <textarea id="directionInput" placeholder="예: 2050년 도심 속 버려진 수직 농장. 식물이 콘크리트 틈으로 자라나고, 빛은 깨진 유리창으로 들어온다. 쓸쓸하지만 아름다운 포스트-아포칼립스 분위기의 광고 캠페인."></textarea>
+
+    <div class="examples">
+      <button class="ex-tag" onclick="setExample(0)">SF 도시 풍경</button>
+      <button class="ex-tag" onclick="setExample(1)">자연과 문명</button>
+      <button class="ex-tag" onclick="setExample(2)">감성 인물</button>
+      <button class="ex-tag" onclick="setExample(3)">공포 분위기</button>
+      <button class="ex-tag" onclick="setExample(4)">제품 광고</button>
+    </div>
+
+    <div class="options-row">
+      <div class="opt-group">
+        <label>씬 수</label>
+        <select id="sceneCount">
+          <option value="3">3장</option>
+          <option value="4" selected>4장</option>
+          <option value="5">5장</option>
+          <option value="6">6장</option>
+        </select>
+      </div>
+      <div class="opt-group">
+        <label>스타일</label>
+        <select id="styleSelect">
+          <option value="cinematic film still">시네마틱</option>
+          <option value="photorealistic">사진 리얼</option>
+          <option value="illustration">일러스트</option>
+          <option value="anime style">애니메이션</option>
+          <option value="oil painting">유화</option>
+          <option value="dark moody">다크 무디</option>
+        </select>
+      </div>
+      <div class="opt-group">
+        <label>비율</label>
+        <select id="ratioSelect">
+          <option value="16:9 widescreen">16:9 와이드</option>
+          <option value="1:1 square">1:1 정사각</option>
+          <option value="9:16 vertical">9:16 세로</option>
+          <option value="4:3">4:3</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generateStoryboard()">
+      ✦ 스토리보드 생성
+    </button>
+  </div>
+
+  <!-- 결과 섹션 -->
+  <div id="resultsSection">
+    <div class="results-header">
+      <h2 id="resultsTitle">스토리보드</h2>
+      <button class="btn-all" id="allImgBtn" onclick="generateAllImages()">
+        🎨 전체 이미지 생성
+      </button>
+    </div>
+
+    <div class="storyboard-overview" id="storyboardOverview">
+      <h3>스토리보드 개요</h3>
+      <p id="overviewText"></p>
+    </div>
+
+    <div class="scene-grid" id="sceneGrid"></div>
+  </div>
+
+</div>
+
+<script>
+const EXAMPLES = [
+  "2050년 네온사인이 반짝이는 홍콩풍 메가시티. 빗속에서 사이보그 상인들이 좁은 골목을 오간다. 사이버펑크 미학에 아시아 전통 건축이 혼재한 세계.",
+  "인간이 사라진 지 200년이 지난 도시. 도로를 뚫고 자라난 숲, 수영장을 점령한 연꽃, 고층 빌딩 꼭대기에 둥지 튼 독수리들. 자연의 조용한 반격.",
+  "이른 새벽 파리의 카페. 창문에 맺힌 빗방울, 혼자 앉아 커피를 마시는 여성, 흐릿한 가로등. 고독하지만 따뜻한 필름 느낌.",
+  "버려진 고택 복도. 끝에서 흔들리는 촛불, 벽에 걸린 초상화의 눈이 따라온다. 1800년대 고딕 공포물 분위기.",
+  "미니멀한 흰 공간 위에 놓인 향수병 하나. 빛이 유리를 투과하며 만들어내는 프리즘 효과. 럭셔리 향수 브랜드 캠페인."
+];
+
+let scenes = [];
+
+function setExample(i) {
+  document.getElementById('directionInput').value = EXAMPLES[i];
+}
+
+async function generateStoryboard() {
+  const direction = document.getElementById('directionInput').value.trim();
+  if (!direction) { alert('연출 기획을 입력해주세요.'); return; }
+
+  const count = document.getElementById('sceneCount').value;
+  const style = document.getElementById('styleSelect').value;
+  const ratio = document.getElementById('ratioSelect').value;
+
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 스토리보드 생성 중...';
+
+  document.getElementById('resultsSection').style.display = 'none';
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ direction, count: parseInt(count), style, ratio })
+    });
+
+    if (!res.ok) throw new Error('서버 오류: ' + res.status);
+
+    const data = await res.json();
+    scenes = data.scenes;
+
+    document.getElementById('overviewText').textContent = data.overview;
+    document.getElementById('resultsTitle').textContent = data.title || '스토리보드';
+    renderScenes();
+    document.getElementById('resultsSection').style.display = 'block';
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+
+  } catch(e) {
+    alert('오류가 발생했습니다: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✦ 스토리보드 재생성';
+  }
+}
+
+function renderScenes() {
+  const grid = document.getElementById('sceneGrid');
+  grid.innerHTML = '';
+
+  scenes.forEach((scene, i) => {
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    card.id = `scene-${i}`;
+    card.innerHTML = `
+      <div class="scene-card-header">
+        <span class="scene-num">씬 ${i + 1}</span>
+        <span class="scene-title">${scene.title}</span>
+        <span class="scene-subtitle">${scene.mood}</span>
+      </div>
+      <div class="scene-card-body">
+        <div class="prompt-box">${scene.prompt}</div>
+        <div class="image-area" id="imgArea-${i}">
+          <button class="btn-img" id="imgBtn-${i}" onclick="generateImage(${i})">
+            🎨 이미지 생성
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+async function generateImage(idx) {
+  const btn = document.getElementById(`imgBtn-${idx}`);
+  const area = document.getElementById(`imgArea-${idx}`);
+  const scene = scenes[idx];
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 이미지 생성 중...';
+
+  try {
+    const res = await fetch('/api/image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: scene.prompt })
+    });
+
+    if (!res.ok) throw new Error('이미지 생성 실패: ' + res.status);
+
+    const data = await res.json();
+
+    if (data.imageUrl) {
+      area.innerHTML = `
+        <img src="${data.imageUrl}" class="generated-image" alt="${scene.title}" />
+        <div class="img-download">
+          <a href="${data.imageUrl}" download="scene-${idx + 1}.png" target="_blank">
+            <button class="btn-download">↓ 다운로드</button>
+          </a>
+        </div>
+      `;
+    } else if (data.imageBase64) {
+      const src = `data:image/png;base64,${data.imageBase64}`;
+      area.innerHTML = `
+        <img src="${src}" class="generated-image" alt="${scene.title}" />
+        <div class="img-download">
+          <a href="${src}" download="scene-${idx + 1}.png">
+            <button class="btn-download">↓ 다운로드</button>
+          </a>
+        </div>
+      `;
+    } else {
+      throw new Error('이미지 데이터를 받지 못했습니다.');
+    }
+
+  } catch(e) {
+    area.innerHTML = `
+      <div class="error-msg">⚠ ${e.message}</div>
+      <button class="btn-img" onclick="generateImage(${idx})" style="margin-top:8px;">
+        🔄 다시 시도
+      </button>
+    `;
+    console.error(e);
+  }
+}
+
+async function generateAllImages() {
+  const allBtn = document.getElementById('allImgBtn');
+  allBtn.disabled = true;
+  allBtn.innerHTML = '<span class="spinner"></span> 생성 중...';
+
+  for (let i = 0; i < scenes.length; i++) {
+    const btn = document.getElementById(`imgBtn-${i}`);
+    if (btn && !btn.disabled) {
+      await generateImage(i);
+      await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+
+  allBtn.disabled = false;
+  allBtn.innerHTML = '🎨 전체 재생성';
+}
+</script>
+
+</body>
+</html>
