@@ -54,7 +54,7 @@ Respond ONLY with a valid JSON object in this exact format, no markdown, no extr
           model: 'llama-3.3-70b-versatile',
           messages: [{ role: 'user', content: prompt }],
           temperature: 0.8,
-         max_tokens: 8192
+          max_tokens: 4096
         })
       });
 
