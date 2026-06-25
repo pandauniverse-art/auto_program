@@ -17,15 +17,12 @@
     header { border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; align-items: center; gap: 12px; background: var(--surface); }
     .logo { width: 32px; height: 32px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
     header h1 { font-size: 16px; font-weight: 500; }
-
-    /* 탭 */
     .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--surface); padding: 0 32px; }
     .tab-btn { padding: 14px 24px; font-size: 13px; font-weight: 500; color: var(--text2); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all 0.15s; margin-bottom: -1px; }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-
     .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
     .section-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 24px; }
     .section-box h2 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
@@ -33,20 +30,21 @@
     textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 14px; line-height: 1.7; padding: 14px 16px; resize: vertical; min-height: 120px; outline: none; transition: border-color 0.2s; }
     textarea:focus { border-color: var(--accent); }
     textarea::placeholder { color: var(--text3); }
+    input[type="text"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 14px; padding: 12px 16px; outline: none; transition: border-color 0.2s; }
+    input[type="text"]:focus { border-color: var(--accent); }
+    input[type="text"]::placeholder { color: var(--text3); }
     .options-row { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
     .opt-group { display: flex; align-items: center; gap: 8px; }
     .opt-group label { font-size: 12px; color: var(--text2); }
     select { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 12px; padding: 7px 10px; outline: none; cursor: pointer; }
     .examples { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-    .ex-tag { font-size: 11px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--text2); cursor: pointer; transition: all 0.15s; background: none; }
+    .ex-tag { font-size: 11px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--text2); cursor: pointer; transition: all 0.15s; background: none; font-family: 'Noto Sans KR', sans-serif; }
     .ex-tag:hover { border-color: var(--accent); color: var(--accent2); }
     .btn-primary { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; margin-top: 20px; }
     .btn-primary:hover { opacity: 0.88; }
     .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
     .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* 스토리보드 결과 */
     .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
     .btn-secondary { padding: 8px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 12px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; display: flex; align-items: center; gap: 6px; transition: border-color 0.15s; }
     .btn-secondary:hover { border-color: var(--accent); }
@@ -54,7 +52,7 @@
     .storyline-box { background: var(--surface); border: 1px solid var(--accent); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
     .storyline-box h3 { font-size: 12px; font-weight: 500; color: var(--accent2); margin-bottom: 10px; letter-spacing: 0.05em; text-transform: uppercase; }
     .overview-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px; display: flex; gap: 16px; }
-    .overview-box h3 { font-size: 12px; font-weight: 500; color: var(--text2); letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; margin-top: 2px; }
+    .overview-box h3 { font-size: 12px; font-weight: 500; color: var(--text2); white-space: nowrap; margin-top: 2px; }
     .scene-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
     .scene-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
     .scene-card-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--surface2); }
@@ -74,43 +72,62 @@
     .generated-image { width: 100%; border-radius: 8px; display: block; margin-bottom: 8px; }
     .error-msg { font-size: 11px; color: var(--error); background: rgba(248,113,113,0.08); padding: 8px 10px; border-radius: 6px; margin-top: 8px; }
     .api-badge { font-size: 10px; padding: 2px 8px; border-radius: 100px; background: rgba(52,211,153,0.1); color: var(--success); border: 1px solid rgba(52,211,153,0.2); margin-left: 8px; }
-    .btn-use-prompt { font-size: 11px; padding: 5px 10px; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text2); cursor: pointer; font-family: 'Noto Sans KR', sans-serif; margin-right: 6px; transition: all 0.15s; }
+    .btn-use-prompt { font-size: 11px; padding: 5px 10px; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text2); cursor: pointer; font-family: 'Noto Sans KR', sans-serif; margin-right: 6px; transition: all 0.15s; margin-bottom: 10px; }
     .btn-use-prompt:hover { border-color: var(--accent2); color: var(--accent2); }
 
-    /* 프롬프트 변환 탭 */
-    .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 20px; }
-    .model-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 10px; background: var(--surface2); }
+    /* 모델 그룹 */
+    .model-group { margin-bottom: 20px; }
+    .model-group-title { font-size: 11px; font-weight: 500; color: var(--text2); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); }
+    .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+    .model-card { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 8px; background: var(--surface2); }
     .model-card:hover { border-color: var(--accent); }
     .model-card.selected { border-color: var(--accent); background: rgba(123,104,238,0.1); }
-    .model-card input[type="checkbox"] { display: none; }
-    .model-check { width: 16px; height: 16px; border: 1.5px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+    .model-check { width: 14px; height: 14px; border: 1.5px solid var(--border); border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
     .model-card.selected .model-check { background: var(--accent); border-color: var(--accent); }
-    .model-check-inner { width: 8px; height: 8px; background: #fff; border-radius: 2px; display: none; }
+    .model-check-inner { width: 6px; height: 6px; background: #fff; border-radius: 1px; display: none; }
     .model-card.selected .model-check-inner { display: block; }
-    .model-name { font-size: 12px; font-weight: 500; }
-    .model-desc { font-size: 10px; color: var(--text2); margin-top: 2px; }
+    .model-info { flex: 1; min-width: 0; }
+    .model-name { font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .model-type { font-size: 10px; color: var(--text3); margin-top: 1px; }
 
-    .convert-input-area { margin-bottom: 16px; }
-    .convert-input-area label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 8px; }
-    .scene-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .scene-pill { font-size: 11px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--text2); cursor: pointer; background: none; transition: all 0.15s; font-family: 'Noto Sans KR', sans-serif; }
-    .scene-pill:hover { border-color: var(--accent); color: var(--accent2); }
-
-    .converted-results { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+    .convert-results { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
     .converted-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
     .converted-card-header { padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .converted-model-name { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-    .model-icon { font-size: 16px; }
+    .converted-model-name { font-size: 13px; font-weight: 500; }
     .btn-copy { font-size: 11px; padding: 5px 12px; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text2); cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all 0.15s; }
     .btn-copy:hover { border-color: var(--success); color: var(--success); }
     .btn-copy.copied { border-color: var(--success); color: var(--success); }
-    .converted-prompt { padding: 16px; font-size: 12px; font-family: monospace; color: var(--text); line-height: 1.7; word-break: break-all; background: var(--surface); }
+    .converted-prompt { padding: 16px; font-size: 12px; font-family: monospace; color: var(--text); line-height: 1.7; word-break: break-all; }
+    .scene-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .scene-pill { font-size: 11px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--text2); cursor: pointer; background: none; transition: all 0.15s; font-family: 'Noto Sans KR', sans-serif; }
+    .scene-pill:hover { border-color: var(--accent); color: var(--accent2); }
+    .select-all-btn { font-size: 11px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--text2); cursor: pointer; background: none; transition: all 0.15s; font-family: 'Noto Sans KR', sans-serif; margin-bottom: 12px; }
+    .select-all-btn:hover { border-color: var(--accent); color: var(--accent2); }
 
-    @media (max-width: 600px) { .container { padding: 24px 16px; } .tab-bar { padding: 0 16px; } header { padding: 14px 16px; } .scene-grid { grid-template-columns: 1fr; } .model-grid { grid-template-columns: repeat(2, 1fr); } }
+    /* 뉴스 탭 */
+    .search-row { display: flex; gap: 10px; margin-bottom: 16px; }
+    .search-row input { flex: 1; }
+    .search-row select { min-width: 100px; }
+    .news-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+    .news-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; transition: border-color 0.15s; }
+    .news-card:hover { border-color: var(--border); }
+    .news-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
+    .news-title a { color: var(--text); text-decoration: none; }
+    .news-title a:hover { color: var(--accent2); }
+    .news-desc { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 10px; }
+    .news-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .news-date { font-size: 11px; color: var(--text3); }
+    .news-link { font-size: 11px; padding: 4px 10px; border: 1px solid var(--border); border-radius: 100px; color: var(--text2); text-decoration: none; transition: all 0.15s; }
+    .news-link:hover { border-color: var(--accent); color: var(--accent2); }
+    .news-count { font-size: 12px; color: var(--text2); margin-bottom: 16px; }
+    .keyword-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .keyword-tag { font-size: 11px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--text2); cursor: pointer; background: none; font-family: 'Noto Sans KR', sans-serif; transition: all 0.15s; }
+    .keyword-tag:hover { border-color: var(--accent); color: var(--accent2); }
+
+    @media (max-width: 600px) { .container { padding: 24px 16px; } .tab-bar { padding: 0 16px; } header { padding: 14px 16px; } .scene-grid { grid-template-columns: 1fr; } .model-grid { grid-template-columns: repeat(2, 1fr); } .search-row { flex-direction: column; } }
   </style>
 </head>
 <body>
-
 <header>
   <div class="logo">🎬</div>
   <h1>AI 스토리보드 스튜디오</h1>
@@ -119,6 +136,7 @@
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('storyboard', this)">📋 스토리보드</button>
   <button class="tab-btn" onclick="switchTab('converter', this)">✨ 프롬프트 변환</button>
+  <button class="tab-btn" onclick="switchTab('news', this)">📰 뉴스 검색</button>
 </div>
 
 <!-- 스토리보드 탭 -->
@@ -127,7 +145,7 @@
     <div class="section-box">
       <h2>연출 기획 입력</h2>
       <p>기획 의도나 방향성을 자유롭게 입력하세요. AI가 스토리라인을 구성하고 각 씬의 연출 의도에 맞는 프롬프트를 자동으로 생성합니다.</p>
-      <textarea id="directionInput" placeholder="예: 2050년 도심 속 버려진 수직 농장. 식물이 콘크리트 틈으로 자라나고, 빛은 깨진 유리창으로 들어온다. 쓸쓸하지만 아름다운 포스트-아포칼립스 분위기."></textarea>
+      <textarea id="directionInput" placeholder="예: 2050년 도심 속 버려진 수직 농장. 식물이 콘크리트 틈으로 자라나고, 빛은 깨진 유리창으로 들어온다."></textarea>
       <div class="examples">
         <button class="ex-tag" onclick="setExample(0)">SF 도시 풍경</button>
         <button class="ex-tag" onclick="setExample(1)">자연과 문명</button>
@@ -139,17 +157,10 @@
         <div class="opt-group">
           <label>씬 수</label>
           <select id="sceneCount">
-            <option value="3">3장</option>
-            <option value="4" selected>4장</option>
-            <option value="5">5장</option>
-            <option value="6">6장</option>
-            <option value="8">8장</option>
-            <option value="10">10장</option>
-            <option value="12">12장</option>
-            <option value="15">15장</option>
-            <option value="20">20장</option>
-            <option value="25">25장</option>
-            <option value="30">30장</option>
+            <option value="3">3장</option><option value="4" selected>4장</option><option value="5">5장</option>
+            <option value="6">6장</option><option value="8">8장</option><option value="10">10장</option>
+            <option value="12">12장</option><option value="15">15장</option><option value="20">20장</option>
+            <option value="25">25장</option><option value="30">30장</option>
           </select>
         </div>
         <div class="opt-group">
@@ -189,7 +200,7 @@
         <p id="storyLineText" style="font-size:14px;line-height:1.8;"></p>
       </div>
       <div class="overview-box">
-        <h3>🎬 연출 방향</h3>
+        <h3>🎬 연출 방향&nbsp;&nbsp;</h3>
         <p id="overviewText" style="font-size:13px;color:var(--text2);line-height:1.7;"></p>
       </div>
       <div class="scene-grid" id="sceneGrid"></div>
@@ -202,34 +213,85 @@
   <div class="container">
     <div class="section-box">
       <h2>프롬프트 변환</h2>
-      <p>장면을 설명하면 선택한 AI 모델에 최적화된 프롬프트로 자동 변환해드립니다. 스토리보드에서 생성된 씬을 불러올 수도 있어요.</p>
+      <p>장면을 설명하면 선택한 AI 모델에 최적화된 프롬프트로 자동 변환합니다. 힉스필드 전체 모델 + 외부 AI를 지원해요.</p>
 
-      <!-- 스토리보드 씬 불러오기 -->
       <div id="sceneImportArea" style="display:none;margin-bottom:16px;">
         <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">스토리보드에서 불러오기</div>
         <div class="scene-selector" id="scenePills"></div>
       </div>
 
-      <div class="convert-input-area">
-        <label>장면 설명</label>
-        <textarea id="convertInput" placeholder="예: 석양이 지는 해변에서 혼자 걷는 여성. 파도 소리, 모래 위의 발자국, 오렌지빛 하늘." style="min-height:100px;"></textarea>
+      <textarea id="convertInput" placeholder="예: 석양이 지는 해변에서 혼자 걷는 여성. 파도 소리, 모래 위의 발자국, 오렌지빛 하늘." style="min-height:100px;margin-bottom:16px;"></textarea>
+
+      <!-- 힉스필드 이미지 모델 -->
+      <div class="model-group">
+        <div class="model-group-title">힉스필드 — 이미지 모델</div>
+        <div class="model-grid" id="modelGrid-hf-image"></div>
       </div>
 
-      <!-- 모델 선택 -->
-      <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">변환할 모델 선택 (복수 선택 가능)</div>
-      <div class="model-grid" id="modelGrid"></div>
+      <!-- 힉스필드 영상 모델 -->
+      <div class="model-group">
+        <div class="model-group-title">힉스필드 — 영상 모델</div>
+        <div class="model-grid" id="modelGrid-hf-video"></div>
+      </div>
+
+      <!-- 외부 모델 -->
+      <div class="model-group">
+        <div class="model-group-title">외부 AI 모델</div>
+        <div class="model-grid" id="modelGrid-external"></div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:4px;margin-bottom:4px;">
+        <button class="select-all-btn" onclick="selectAllModels()">전체 선택</button>
+        <button class="select-all-btn" onclick="deselectAllModels()">전체 해제</button>
+      </div>
 
       <button class="btn-primary" id="convertBtn" onclick="convertPrompts()">✦ 프롬프트 변환</button>
     </div>
+    <div id="convertedResults" class="convert-results"></div>
+  </div>
+</div>
 
-    <div id="convertedResults" class="converted-results"></div>
+<!-- 뉴스 검색 탭 -->
+<div id="tab-news" class="tab-content">
+  <div class="container">
+    <div class="section-box">
+      <h2>뉴스 검색</h2>
+      <p>키워드를 입력하면 네이버 뉴스에서 관련 기사를 검색하고 링크와 함께 정리해드립니다.</p>
+
+      <div class="search-row">
+        <input type="text" id="newsQuery" placeholder="검색어 입력 (예: AI 영상 생성, 힉스필드, 스토리보드)" onkeydown="if(event.key==='Enter')searchNews()" />
+        <select id="newsSort">
+          <option value="date">최신순</option>
+          <option value="sim">관련도순</option>
+        </select>
+        <select id="newsCount">
+          <option value="10">10개</option>
+          <option value="20" selected>20개</option>
+          <option value="30">30개</option>
+          <option value="50">50개</option>
+        </select>
+      </div>
+
+      <div class="keyword-tags">
+        <button class="keyword-tag" onclick="setNewsKeyword('AI 이미지 생성')">AI 이미지 생성</button>
+        <button class="keyword-tag" onclick="setNewsKeyword('AI 영상 제작')">AI 영상 제작</button>
+        <button class="keyword-tag" onclick="setNewsKeyword('스토리보드')">스토리보드</button>
+        <button class="keyword-tag" onclick="setNewsKeyword('미드저니')">미드저니</button>
+        <button class="keyword-tag" onclick="setNewsKeyword('소라 AI')">소라 AI</button>
+        <button class="keyword-tag" onclick="setNewsKeyword('생성형 AI')">생성형 AI</button>
+        <button class="keyword-tag" onclick="setNewsKeyword('인공지능 광고')">인공지능 광고</button>
+      </div>
+
+      <button class="btn-primary" id="newsBtn" onclick="searchNews()">🔍 뉴스 검색</button>
+    </div>
+
+    <div id="newsResults"></div>
   </div>
 </div>
 
 <script>
-// 전역 데이터 (탭 이동해도 유지)
+// 전역 데이터
 let scenes = [];
-let storyData = null;
 
 const EXAMPLES = [
   "2050년 네온사인이 반짝이는 홍콩풍 메가시티. 빗속에서 사이보그 상인들이 좁은 골목을 오간다.",
@@ -239,121 +301,89 @@ const EXAMPLES = [
   "미니멀한 흰 공간 위에 놓인 향수병 하나. 빛이 유리를 투과하며 만들어내는 프리즘 효과."
 ];
 
-const MODELS = [
-  { id: 'midjourney', name: 'Midjourney', icon: '🎨', desc: 'v6 최적화' },
-  { id: 'stable_diffusion', name: 'Stable Diffusion', icon: '🖼️', desc: 'SDXL 최적화' },
-  { id: 'dalle3', name: 'DALL-E 3', icon: '⚡', desc: 'OpenAI' },
-  { id: 'firefly', name: 'Adobe Firefly', icon: '🔥', desc: 'Generative' },
-  { id: 'sora', name: 'Sora', icon: '🎬', desc: 'OpenAI 영상' },
-  { id: 'higgsfield', name: '힉스필드', icon: '✨', desc: 'Cinematic' },
-  { id: 'runway', name: 'Runway', icon: '🚀', desc: 'Gen-3' },
-  { id: 'kling', name: 'Kling', icon: '🎭', desc: 'Kuaishou' },
+const MODELS_HF_IMAGE = [
+  { id: 'nano_banana_pro', name: 'Nano Banana Pro', desc: '이미지·4K' },
+  { id: 'nano_banana_2', name: 'Nano Banana 2', desc: '이미지·빠름' },
+  { id: 'nano_banana', name: 'Nano Banana', desc: '이미지·경제' },
+  { id: 'soul_2', name: 'Soul 2.0', desc: '이미지·인물' },
+  { id: 'soul_cinematic', name: 'Soul Cinema', desc: '이미지·시네마' },
+  { id: 'soul_cast', name: 'Soul Cast', desc: '이미지·캐릭터' },
+  { id: 'soul_location', name: 'Soul Location', desc: '이미지·배경' },
+  { id: 'seedream_v4_5', name: 'Seedream 4.5', desc: '이미지·4K' },
+  { id: 'seedream_v5_lite', name: 'Seedream 5.0 Lite', desc: '이미지·편집' },
+  { id: 'flux_2', name: 'Flux 2.0', desc: '이미지·정확' },
+  { id: 'flux_kontext', name: 'Flux Kontext Max', desc: '이미지·스타일' },
+  { id: 'cinematic_studio_2_5', name: 'Cinema Studio 2.5', desc: '이미지·시네마' },
+  { id: 'gpt_image_2', name: 'GPT Image 2', desc: '이미지·4K' },
+  { id: 'gpt_image', name: 'GPT Image 1.5', desc: '이미지·편집' },
+  { id: 'kling_omni_image', name: 'Kling O1 Image', desc: '이미지·사실' },
+  { id: 'grok_image', name: 'Grok Imagine', desc: '이미지·표현' },
+  { id: 'recraft', name: 'Recraft 4.1', desc: '이미지·벡터' },
+  { id: 'z_image', name: 'Z Image', desc: '이미지·빠름' },
+  { id: 'marketing_studio_image', name: 'Marketing Studio', desc: '이미지·광고' },
 ];
 
-// 탭 전환
+const MODELS_HF_VIDEO = [
+  { id: 'seedance_2_0', name: 'Seedance 2.0', desc: '영상·4K' },
+  { id: 'seedance_2_0_mini', name: 'Seedance 2.0 Mini', desc: '영상·경제' },
+  { id: 'kling3_0', name: 'Kling 3.0', desc: '영상·멀티샷' },
+  { id: 'kling3_0_turbo', name: 'Kling 3.0 Turbo', desc: '영상·빠름' },
+  { id: 'kling2_6', name: 'Kling 2.6', desc: '영상·물리' },
+  { id: 'cinematic_studio_3_0', name: 'Cinema Studio 3.0', desc: '영상·최고' },
+  { id: 'cinematic_studio_video_v2', name: 'Cinema Studio 2', desc: '영상·시네마' },
+  { id: 'veo3_1', name: 'Google Veo 3.1', desc: '영상·초현실' },
+  { id: 'veo3', name: 'Google Veo 3', desc: '영상·시네마' },
+  { id: 'wan2_7', name: 'Wan 2.7', desc: '영상·오디오' },
+  { id: 'minimax_hailuo', name: 'Minimax Hailuo', desc: '영상·감정' },
+];
+
+const MODELS_EXTERNAL = [
+  { id: 'midjourney', name: 'Midjourney', desc: '이미지' },
+  { id: 'stable_diffusion', name: 'Stable Diffusion', desc: '이미지' },
+  { id: 'dalle3', name: 'DALL-E 3', desc: '이미지' },
+  { id: 'firefly', name: 'Adobe Firefly', desc: '이미지' },
+  { id: 'sora', name: 'Sora', desc: '영상' },
+  { id: 'runway', name: 'Runway Gen-3', desc: '영상' },
+];
+
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + tabId).classList.add('active');
   btn.classList.add('active');
-
-  // 프롬프트 변환 탭으로 이동 시 씬 목록 업데이트
   if (tabId === 'converter') updateScenePills();
 }
 
-function setExample(i) {
-  document.getElementById('directionInput').value = EXAMPLES[i];
-}
+function setExample(i) { document.getElementById('directionInput').value = EXAMPLES[i]; }
+function setNewsKeyword(kw) { document.getElementById('newsQuery').value = kw; }
 
-// 스토리보드 생성
-async function generateStoryboard() {
-  const direction = document.getElementById('directionInput').value.trim();
-  if (!direction) { alert('연출 기획을 입력해주세요.'); return; }
-
-  const count = document.getElementById('sceneCount').value;
-  const style = document.getElementById('styleSelect').value;
-  const ratio = document.getElementById('ratioSelect').value;
-
-  const btn = document.getElementById('generateBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> 스토리보드 생성 중...';
-  document.getElementById('resultsSection').style.display = 'none';
-
-  try {
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ direction, count: parseInt(count), style, ratio })
-    });
-    if (!res.ok) throw new Error('서버 오류: ' + res.status);
-    const data = await res.json();
-
-    // 전역 저장
-    scenes = data.scenes;
-    storyData = data;
-
-    document.getElementById('storyLineText').textContent = data.storyLine || '';
-    document.getElementById('overviewText').textContent = data.overview || '';
-    document.getElementById('resultsTitle').textContent = data.title || '스토리보드';
-    document.getElementById('apiBadge').textContent = data.usedApi === 'groq' ? 'Groq' : 'Gemini';
-
-    renderScenes();
-    document.getElementById('resultsSection').style.display = 'block';
-    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
-
-  } catch(e) {
-    alert('오류: ' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '✦ 스토리보드 재생성';
-  }
-}
-
-function renderScenes() {
-  const grid = document.getElementById('sceneGrid');
+// 모델 카드 렌더링
+function renderModelGrid(containerId, models) {
+  const grid = document.getElementById(containerId);
+  if (!grid) return;
   grid.innerHTML = '';
-  scenes.forEach((scene, i) => {
+  models.forEach(model => {
     const card = document.createElement('div');
-    card.className = 'scene-card';
-    card.id = 'scene-' + i;
-    card.innerHTML = `
-      <div class="scene-card-header">
-        <span class="scene-num">씬 ${i+1}</span>
-        <span class="scene-title">${scene.title}</span>
-        <span class="scene-mood">${scene.mood}</span>
-      </div>
-      <div class="scene-card-body">
-        <div class="scene-meta">
-          <div class="meta-row"><span class="meta-label">역할</span><span class="meta-value">${scene.role||'-'}</span></div>
-          <div class="meta-row"><span class="meta-label">연출</span><span class="meta-value">${scene.direction||'-'}</span></div>
-          <div class="meta-row"><span class="meta-label">설명</span><span class="meta-value">${scene.description||'-'}</span></div>
-        </div>
-        <div class="prompt-label">IMAGE PROMPT</div>
-        <div class="prompt-box">${scene.prompt}</div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;">
-          <button class="btn-use-prompt" onclick="usePromptInConverter(${i})">✨ 프롬프트 변환에서 사용</button>
-        </div>
-        <div class="image-area" id="imgArea-${i}">
-          <button class="btn-img" id="imgBtn-${i}" onclick="generateImage(${i})">🎨 이미지 생성</button>
-        </div>
-      </div>`;
+    card.className = 'model-card';
+    card.id = 'model-' + model.id;
+    card.onclick = () => card.classList.toggle('selected');
+    card.innerHTML = '<div class="model-check"><div class="model-check-inner"></div></div><div class="model-info"><div class="model-name">' + model.name + '</div><div class="model-type">' + model.desc + '</div></div>';
     grid.appendChild(card);
   });
 }
 
-// 씬 프롬프트를 변환 탭에서 사용
-function usePromptInConverter(idx) {
-  document.getElementById('convertInput').value = scenes[idx].prompt;
-  // 프롬프트 변환 탭으로 이동
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-converter').classList.add('active');
-  document.querySelectorAll('.tab-btn')[1].classList.add('active');
-  updateScenePills();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function selectAllModels() {
+  document.querySelectorAll('.model-card').forEach(c => c.classList.add('selected'));
+}
+function deselectAllModels() {
+  document.querySelectorAll('.model-card').forEach(c => c.classList.remove('selected'));
 }
 
-// 변환 탭 씬 목록 업데이트
+function getSelectedModels() {
+  const all = [...MODELS_HF_IMAGE, ...MODELS_HF_VIDEO, ...MODELS_EXTERNAL];
+  return all.filter(m => document.getElementById('model-' + m.id)?.classList.contains('selected'));
+}
+
 function updateScenePills() {
   const area = document.getElementById('sceneImportArea');
   const pills = document.getElementById('scenePills');
@@ -369,72 +399,88 @@ function updateScenePills() {
   });
 }
 
-// 모델 카드 렌더링
-function initModelGrid() {
-  const grid = document.getElementById('modelGrid');
+// 스토리보드 생성
+async function generateStoryboard() {
+  const direction = document.getElementById('directionInput').value.trim();
+  if (!direction) { alert('연출 기획을 입력해주세요.'); return; }
+  const count = document.getElementById('sceneCount').value;
+  const style = document.getElementById('styleSelect').value;
+  const ratio = document.getElementById('ratioSelect').value;
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 스토리보드 생성 중...';
+  document.getElementById('resultsSection').style.display = 'none';
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ direction, count: parseInt(count), style, ratio })
+    });
+    if (!res.ok) throw new Error('서버 오류: ' + res.status);
+    const data = await res.json();
+    scenes = data.scenes;
+    document.getElementById('storyLineText').textContent = data.storyLine || '';
+    document.getElementById('overviewText').textContent = data.overview || '';
+    document.getElementById('resultsTitle').textContent = data.title || '스토리보드';
+    document.getElementById('apiBadge').textContent = data.usedApi === 'groq' ? 'Groq' : 'Gemini';
+    renderScenes();
+    document.getElementById('resultsSection').style.display = 'block';
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+  } catch(e) {
+    alert('오류: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✦ 스토리보드 재생성';
+  }
+}
+
+function renderScenes() {
+  const grid = document.getElementById('sceneGrid');
   grid.innerHTML = '';
-  MODELS.forEach(model => {
+  scenes.forEach((scene, i) => {
     const card = document.createElement('div');
-    card.className = 'model-card';
-    card.id = 'model-' + model.id;
-    card.onclick = () => toggleModel(model.id);
-    card.innerHTML = `
-      <div class="model-check"><div class="model-check-inner"></div></div>
-      <div>
-        <div class="model-name">${model.icon} ${model.name}</div>
-        <div class="model-desc">${model.desc}</div>
-      </div>`;
+    card.className = 'scene-card';
+    card.innerHTML = '<div class="scene-card-header"><span class="scene-num">씬 ' + (i+1) + '</span><span class="scene-title">' + scene.title + '</span><span class="scene-mood">' + scene.mood + '</span></div><div class="scene-card-body"><div class="scene-meta"><div class="meta-row"><span class="meta-label">역할</span><span class="meta-value">' + (scene.role||'-') + '</span></div><div class="meta-row"><span class="meta-label">연출</span><span class="meta-value">' + (scene.direction||'-') + '</span></div><div class="meta-row"><span class="meta-label">설명</span><span class="meta-value">' + (scene.description||'-') + '</span></div></div><div class="prompt-label">IMAGE PROMPT</div><div class="prompt-box">' + scene.prompt + '</div><button class="btn-use-prompt" onclick="usePromptInConverter(' + i + ')">✨ 프롬프트 변환에서 사용</button><div id="imgArea-' + i + '"><button class="btn-img" id="imgBtn-' + i + '" onclick="generateImage(' + i + ')">🎨 이미지 생성</button></div></div>';
     grid.appendChild(card);
   });
 }
 
-function toggleModel(id) {
-  const card = document.getElementById('model-' + id);
-  card.classList.toggle('selected');
-}
-
-function getSelectedModels() {
-  return MODELS.filter(m => document.getElementById('model-' + m.id)?.classList.contains('selected'));
+function usePromptInConverter(idx) {
+  document.getElementById('convertInput').value = scenes[idx].description + '\n' + scenes[idx].prompt;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-converter').classList.add('active');
+  document.querySelectorAll('.tab-btn')[1].classList.add('active');
+  updateScenePills();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // 프롬프트 변환
 async function convertPrompts() {
   const input = document.getElementById('convertInput').value.trim();
   if (!input) { alert('장면 설명을 입력해주세요.'); return; }
-
   const selectedModels = getSelectedModels();
   if (selectedModels.length === 0) { alert('변환할 모델을 선택해주세요.'); return; }
-
   const btn = document.getElementById('convertBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> 변환 중...';
-
   const resultsDiv = document.getElementById('convertedResults');
   resultsDiv.innerHTML = '';
-
   try {
     const res = await fetch('/api/convert', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ scene: input, models: selectedModels.map(m => m.id) })
     });
-
     if (!res.ok) throw new Error('서버 오류: ' + res.status);
     const data = await res.json();
-
     selectedModels.forEach(model => {
       const prompt = data.prompts[model.id] || '';
       const card = document.createElement('div');
       card.className = 'converted-card';
-      card.innerHTML = `
-        <div class="converted-card-header">
-          <div class="converted-model-name"><span class="model-icon">${model.icon}</span>${model.name}</div>
-          <button class="btn-copy" onclick="copyPrompt(this, '${model.id}')">복사</button>
-        </div>
-        <div class="converted-prompt" id="prompt-${model.id}">${prompt}</div>`;
+      card.innerHTML = '<div class="converted-card-header"><div class="converted-model-name">' + model.name + ' <span style="font-size:10px;color:var(--text3);">' + model.desc + '</span></div><button class="btn-copy" onclick="copyPrompt(this, \'' + model.id + '\')">복사</button></div><div class="converted-prompt" id="prompt-' + model.id + '">' + prompt + '</div>';
       resultsDiv.appendChild(card);
     });
-
   } catch(e) {
     resultsDiv.innerHTML = '<div style="color:var(--error);padding:16px;">오류: ' + e.message + '</div>';
   } finally {
@@ -450,6 +496,51 @@ function copyPrompt(btn, modelId) {
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
   });
+}
+
+// 뉴스 검색
+async function searchNews() {
+  const query = document.getElementById('newsQuery').value.trim();
+  if (!query) { alert('검색어를 입력해주세요.'); return; }
+  const sort = document.getElementById('newsSort').value;
+  const display = document.getElementById('newsCount').value;
+  const btn = document.getElementById('newsBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 검색 중...';
+  const resultsDiv = document.getElementById('newsResults');
+  resultsDiv.innerHTML = '';
+  try {
+    const res = await fetch('/api/news', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, display: parseInt(display), sort })
+    });
+    if (!res.ok) throw new Error('서버 오류: ' + res.status);
+    const data = await res.json();
+    if (!data.items || data.items.length === 0) {
+      resultsDiv.innerHTML = '<div style="color:var(--text2);padding:20px;text-align:center;">검색 결과가 없어요.</div>';
+      return;
+    }
+    const countEl = document.createElement('div');
+    countEl.className = 'news-count';
+    countEl.textContent = '"' + query + '" 검색 결과 ' + data.items.length + '개';
+    resultsDiv.appendChild(countEl);
+    const grid = document.createElement('div');
+    grid.className = 'news-grid';
+    data.items.forEach(item => {
+      const date = new Date(item.pubDate).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+      const card = document.createElement('div');
+      card.className = 'news-card';
+      card.innerHTML = '<div class="news-title"><a href="' + item.link + '" target="_blank">' + item.title + '</a></div><div class="news-desc">' + item.description + '</div><div class="news-meta"><span class="news-date">' + date + '</span><a href="' + item.link + '" target="_blank" class="news-link">기사 보기 →</a>' + (item.originallink && item.originallink !== item.link ? '<a href="' + item.originallink + '" target="_blank" class="news-link">원문 →</a>' : '') + '</div>';
+      grid.appendChild(card);
+    });
+    resultsDiv.appendChild(grid);
+  } catch(e) {
+    resultsDiv.innerHTML = '<div style="color:var(--error);padding:16px;">오류: ' + e.message + '</div>';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '🔍 뉴스 검색';
+  }
 }
 
 async function generateImage(idx) {
@@ -485,7 +576,9 @@ async function generateAllImages() {
 }
 
 // 초기화
-initModelGrid();
+renderModelGrid('modelGrid-hf-image', MODELS_HF_IMAGE);
+renderModelGrid('modelGrid-hf-video', MODELS_HF_VIDEO);
+renderModelGrid('modelGrid-external', MODELS_EXTERNAL);
 </script>
 </body>
 </html>
