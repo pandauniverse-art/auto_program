@@ -1,1 +1,661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>파사드 매핑 — AI 스토리보드 스튜디오</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script async src="https://docs.opencv.org/4.8.0/opencv.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap');
 
+    :root {
+      --bg: #0e0e10;
+      --surface: #18181c;
+      --surface2: #222228;
+      --border: #2e2e38;
+      --accent: #7B68EE;
+      --accent2: #a78bfa;
+      --text: #e8e8f0;
+      --text2: #888899;
+      --text3: #555566;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', Arial, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── 공통 탭바 ── */
+    .global-header {
+      flex-shrink: 0;
+      height: 48px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: stretch;
+      padding: 0 16px;
+      gap: 0;
+      z-index: 100;
+    }
+    .global-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 20px;
+      border-right: 1px solid var(--border);
+      margin-right: 8px;
+    }
+    .global-logo .logo-icon {
+      width: 26px; height: 26px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .global-logo span {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .global-tabs {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      flex: 1;
+    }
+    .global-tab {
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text2);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .global-tab:hover { color: var(--text); }
+    .global-tab.active {
+      color: var(--accent2);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── 매핑 앱 레이아웃 ── */
+    .app {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* 툴바 */
+    .toolbar {
+      flex-shrink: 0;
+      height: 40px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+    }
+    .toolbar-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text2);
+      margin-right: 8px;
+      white-space: nowrap;
+    }
+    .toolbar-btn {
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--surface);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    .toolbar-btn input { display: none; }
+    .toolbar-drop { flex: 1; }
+
+    /* 메인 레이아웃 */
+    .main-layout {
+      flex: 1 1 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+    }
+
+    .stage-scroll {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow: auto;
+      background: #050608;
+      position: relative;
+      padding: 20px;
+    }
+
+    .resizer {
+      width: 4px;
+      flex-shrink: 0;
+      background: var(--border);
+      cursor: col-resize;
+    }
+    .resizer:hover { background: #3f3f46; }
+
+    /* 우측 패널 */
+    .side-panel {
+      width: 300px;
+      min-width: 240px;
+      max-width: 420px;
+      flex-shrink: 0;
+      overflow-y: auto;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    /* 타임라인 */
+    .timeline-panel {
+      flex-shrink: 0;
+      height: 130px;
+      background: #0a0a0d;
+      border-top: 1px solid var(--border);
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* 스테이지 */
+    .stage {
+      position: relative;
+      display: inline-block;
+      transform-origin: 0 0;
+      background: #050608;
+    }
+
+    #bgImg {
+      display: block;
+      max-width: none !important;
+      max-height: none !important;
+      width: auto !important;
+      height: auto !important;
+      user-select: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #bgImg:not([src]), #mapImg:not([src]), #mapVideo:not([src]) { display: none !important; }
+    #scanCanvas { display: none !important; }
+
+    .mapped {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.92;
+      clip-path: url(#maskClip);
+      transform-origin: 0 0;
+      z-index: 2;
+    }
+    .mapped.empty { display: none !important; }
+    .mapped img, .mapped video { display: none; transform-origin: 0 0; }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: auto;
+      z-index: 3;
+    }
+
+    #poly {
+      fill: rgba(123,104,238,0.12);
+      stroke: rgba(123,104,238,0.95);
+      stroke-width: 3;
+      fill-rule: evenodd;
+      vector-effect: non-scaling-stroke;
+    }
+
+    #scanRect {
+      display: none;
+      fill: rgba(255,255,255,0.08);
+      stroke: rgba(255,255,255,0.95);
+      stroke-width: 2;
+      stroke-dasharray: 8 6;
+    }
+
+    .scan-hint {
+      fill: rgba(123,104,238,0.08);
+      stroke: rgba(123,104,238,0.85);
+      stroke-width: 2;
+      stroke-dasharray: 6 4;
+    }
+
+    .stage.hide-guides #poly,
+    .stage.hide-guides #scanRect,
+    .stage.hide-guides .pt { display: none; }
+
+    .pt {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      cursor: grab;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.45);
+    }
+    .pt.selected { background: #facc15; }
+    .pt:active { cursor: grabbing; }
+
+    /* 패널 컴포넌트 */
+    .panel-row { display: flex; gap: 6px; }
+
+    .panel-label {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 11px;
+      color: var(--text2);
+    }
+
+    select {
+      height: 30px;
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 0 6px;
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .layer-tabs { display: flex; gap: 4px; }
+
+    .layer-btn {
+      flex: 1;
+      height: 28px;
+      padding: 0;
+      border: none;
+      border-radius: 4px;
+      background: var(--surface2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .step-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 7px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--bg);
+    }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text2);
+      min-width: 46px;
+    }
+
+    button {
+      height: 26px;
+      padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 12px;
+      color: var(--text2);
+      cursor: pointer;
+    }
+
+    .slider-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text2);
+      width: 100%;
+    }
+
+    input[type="range"] { flex: 1; min-width: 60px; height: 14px; accent-color: var(--accent); }
+
+    .status-mini {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 11px;
+      color: var(--text3);
+      padding: 3px 0;
+    }
+
+    .file-list {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 5px;
+      font-size: 11px;
+      color: var(--text2);
+      line-height: 1.6;
+      min-height: 30px;
+    }
+
+    /* 타임라인 */
+    .tl-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tl-time {
+      font-family: monospace;
+      font-size: 14px;
+      color: var(--accent2);
+      min-width: 68px;
+    }
+    .tl-seek { flex: 1; }
+    .tl-offsets {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .tl-ch {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 11px;
+      color: var(--text2);
+    }
+    .tl-ch input[type="range"] { width: 100%; }
+    .tl-val { font-size: 10px; color: var(--accent2); }
+
+    @media (max-width: 800px) {
+      .main-layout { flex-direction: column; }
+      .side-panel { width: 100%; max-width: none; height: 240px; border-left: none; border-top: 1px solid var(--border); }
+      .tl-offsets { grid-template-columns: repeat(2, 1fr); }
+      .global-tab span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 공통 탭바 -->
+  <header class="global-header">
+    <div class="global-logo">
+      <div class="logo-icon">🎬</div>
+      <span>AI 스튜디오</span>
+    </div>
+    <nav class="global-tabs">
+      <a class="global-tab" href="/index.html">📋 <span>스토리보드</span></a>
+      <a class="global-tab" href="/index.html#converter">✨ <span>프롬프트 변환</span></a>
+      <a class="global-tab" href="/index.html#news">📰 <span>뉴스 검색</span></a>
+      <a class="global-tab active" href="/mapping.html">🎬 <span>파사드 매핑</span></a>
+    </nav>
+  </header>
+
+  <!-- 매핑 앱 -->
+  <div class="app">
+
+    <!-- 툴바 -->
+    <div class="toolbar">
+      <span class="toolbar-title">Spatial Facade Mapper</span>
+      <label class="toolbar-btn">파일 선택 <input id="fileInput" type="file" multiple accept="image/*,video/*"></label>
+      <label class="toolbar-btn">폴더 선택 <input id="folderInput" type="file" webkitdirectory directory multiple></label>
+      <div id="dropZone" class="toolbar-drop"></div>
+    </div>
+
+    <!-- 메인 -->
+    <div class="main-layout">
+
+      <!-- 스테이지 -->
+      <div id="stageScroll" class="stage-scroll">
+        <div id="stage" class="stage">
+          <div id="webgl-container" style="position:absolute;top:0;left:0;width:100%;height:100%;"></div>
+          <img id="bgImg" alt="배경 이미지">
+          <div id="mapped" class="mapped empty">
+            <img id="mapImg" alt="파사드 이미지">
+            <video id="mapVideo" muted loop playsinline></video>
+          </div>
+          <svg id="overlay" class="overlay">
+            <defs><clipPath id="maskClip"><path id="clipPathData" d=""></path></clipPath></defs>
+            <path id="poly" d=""></path>
+            <rect id="scanRect"></rect>
+          </svg>
+        </div>
+      </div>
+
+      <div id="resizer" class="resizer"></div>
+
+      <!-- 우측 패널 -->
+      <aside class="side-panel" id="sidePanel">
+
+        <div class="panel-row">
+          <label class="panel-label">배경
+            <select id="bgSelect"><option value="">선택</option></select>
+          </label>
+          <label class="panel-label">콘텐츠
+            <div style="display:flex;gap:4px;">
+              <select id="contentSelect" style="flex:1"><option value="">선택</option></select>
+              <button type="button" onclick="const i=+contentSelect.value;if(files[i])setContent(files[i])" style="height:28px;padding:0 8px;font-size:11px;">적용</button>
+            </div>
+          </label>
+        </div>
+
+        <div class="layer-tabs">
+          <button type="button" class="layer-btn" onclick="switchLayer(0)" style="background:var(--accent)">Wall A</button>
+          <button type="button" class="layer-btn" onclick="switchLayer(1)">Wall B</button>
+          <button type="button" class="layer-btn" onclick="switchLayer(2)">Wall C</button>
+          <button type="button" class="layer-btn" onclick="switchLayer(3)">Wall D</button>
+        </div>
+
+        <div class="step-group">
+          <span class="step-label">① 영역</span>
+          <button id="scanAreaButton" disabled>드래그</button>
+          <button id="clearScanAreasButton" disabled>지우기</button>
+        </div>
+
+        <div class="step-group">
+          <span class="step-label">② AI스캔</span>
+          <button id="scanButton" disabled>스캔</button>
+          <button id="nextCandidateButton" disabled>다음 →</button>
+        </div>
+
+        <div class="step-group">
+          <span class="step-label">③ 핀</span>
+          <label class="radio-label"><input type="radio" name="editMode" id="modeWarp" value="warp" checked> 워프</label>
+          <label class="radio-label"><input type="radio" name="editMode" id="modeMask" value="mask"> 마스크</label>
+          <button id="addPointButton" disabled>추가</button>
+          <button id="curveToggleBtn" onclick="toggleCurveMode()">〰️ 곡선: OFF</button>
+          <button id="deletePointButton" disabled>삭제</button>
+          <button id="resetButton" disabled>초기화</button>
+        </div>
+
+        <div class="step-group">
+          <span class="step-label">⑤ 루프</span>
+          <button id="loopToggleBtn" onclick="toggleLoop()">🔁 루프: OFF</button>
+        </div>
+
+        <div class="step-group">
+          <span class="step-label">④ 톤</span>
+          <label class="slider-label">투명도 <input id="opacitySlider" type="range" min="0" max="100" value="100"></label>
+          <label class="slider-label">밝기 <input id="brightnessSlider" type="range" min="0" max="200" value="100"></label>
+          <label class="slider-label">블렌드
+            <select id="blendModeSelect">
+              <option value="normal">Normal</option>
+              <option value="screen">Screen</option>
+              <option value="multiply">Multiply</option>
+              <option value="overlay">Overlay</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="step-group">
+          <label class="radio-label"><input id="guideToggle" type="checkbox" checked> 가이드</label>
+          <label class="slider-label">줌 <input id="zoomSlider" type="range" min="0" max="200" value="100"></label>
+        </div>
+
+        <div class="status-mini">
+          <span id="bgInfo">배경: 없음</span>
+          <span id="contentInfo">콘텐츠: 없음</span>
+          <span id="modeInfo">대기</span>
+        </div>
+
+        <div class="file-list" id="fileList"></div>
+
+      </aside>
+    </div>
+
+    <!-- 렌더링 모달 -->
+    <div id="renderModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;width:340px;display:flex;flex-direction:column;gap:10px;color:var(--text);">
+        <h3 style="margin:0;font-size:15px;">렌더링 설정</h3>
+        <label style="font-size:12px;color:var(--text2);">FPS
+          <select id="renderFps" style="width:100%;height:28px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:4px;margin-top:3px;">
+            <option value="24">24 fps (영화)</option>
+            <option value="30" selected>30 fps (표준)</option>
+            <option value="60">60 fps (고화질)</option>
+          </select>
+        </label>
+        <label style="font-size:12px;color:var(--text2);">비트레이트
+          <select id="renderBitrate" style="width:100%;height:28px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:4px;margin-top:3px;">
+            <option value="8000000">8 Mbps (경량)</option>
+            <option value="32000000">32 Mbps (표준)</option>
+            <option value="80000000">80 Mbps (고품질)</option>
+            <option value="150000000" selected>150 Mbps (최고품질)</option>
+            <option value="300000000">300 Mbps (무손실급)</option>
+          </select>
+        </label>
+        <label style="font-size:12px;color:var(--text2);">렌더 구간 (초)
+          <div style="display:flex;gap:6px;margin-top:3px;">
+            <input id="renderStart" type="number" value="0" min="0" step="0.1" style="flex:1;height:28px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0 6px;" placeholder="시작">
+            <input id="renderEnd" type="number" value="0" min="0" step="0.1" style="flex:1;height:28px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0 6px;" placeholder="끝 (0=전체)">
+          </div>
+        </label>
+        <label style="font-size:12px;color:var(--text2);">해상도
+          <div style="display:flex;gap:6px;margin-top:3px;">
+            <input id="renderWidth" type="number" value="0" min="0" style="flex:1;height:28px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0 6px;" placeholder="가로">
+            <span style="color:var(--text3);line-height:28px;">×</span>
+            <input id="renderHeight" type="number" value="0" min="0" style="flex:1;height:28px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0 6px;" placeholder="세로">
+          </div>
+          <select id="renderScale" onchange="applyRenderScale(this.value)" style="width:100%;height:28px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:4px;margin-top:4px;">
+            <option value="0.5">50%</option>
+            <option value="0.75">75%</option>
+            <option value="1" selected>100% (원본)</option>
+            <option value="2">200%</option>
+          </select>
+          <span id="renderResInfo" style="font-size:10px;color:var(--text3);margin-top:2px;">원본 대기중</span>
+        </label>
+        <div style="display:flex;gap:8px;margin-top:6px;">
+          <button id="exportStartBtn" onclick="document.getElementById('renderModal').style.display='none';startExport()" style="flex:1;height:32px;background:var(--accent);border:none;color:#fff;border-radius:6px;cursor:pointer;font-size:13px;">렌더링 시작</button>
+          <button onclick="document.getElementById('renderModal').style.display='none'" style="flex:1;height:32px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;cursor:pointer;font-size:13px;">취소</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 타임라인 -->
+    <div class="timeline-panel">
+      <div class="tl-top">
+        <button id="masterPlayBtn" onclick="isPlaying ? syncPause() : syncPlay()">▶ 재생</button>
+        <span id="timeDisplay" class="tl-time">00:00:00</span>
+        <input id="seekBar" type="range" min="0" max="100" value="0" step="0.1" oninput="syncSeek(+this.value)" class="tl-seek">
+        <button onclick="exportImage()">📷 PNG</button>
+        <button onclick="document.getElementById('renderModal').style.display='flex'">⏺ 렌더링</button>
+        <button id="exportStopBtn" onclick="stopExport()" disabled>⏹ 취소</button>
+      </div>
+      <div class="tl-offsets">
+        <div class="tl-ch">
+          <span>Wall A</span>
+          <input type="range" min="-10" max="10" step="0.1" value="0" oninput="setLayerOffset(0,+this.value);this.nextElementSibling.textContent=(+this.value).toFixed(1)+'s'">
+          <span class="tl-val">0.0s</span>
+        </div>
+        <div class="tl-ch">
+          <span>Wall B</span>
+          <input type="range" min="-10" max="10" step="0.1" value="0" oninput="setLayerOffset(1,+this.value);this.nextElementSibling.textContent=(+this.value).toFixed(1)+'s'">
+          <span class="tl-val">0.0s</span>
+        </div>
+        <div class="tl-ch">
+          <span>Wall C</span>
+          <input type="range" min="-10" max="10" step="0.1" value="0" oninput="setLayerOffset(2,+this.value);this.nextElementSibling.textContent=(+this.value).toFixed(1)+'s'">
+          <span class="tl-val">0.0s</span>
+        </div>
+        <div class="tl-ch">
+          <span>Wall D</span>
+          <input type="range" min="-10" max="10" step="0.1" value="0" oninput="setLayerOffset(3,+this.value);this.nextElementSibling.textContent=(+this.value).toFixed(1)+'s'">
+          <span class="tl-val">0.0s</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <canvas id="scanCanvas" style="display:none;"></canvas>
+
+  <script>
+    const resizer = document.getElementById('resizer');
+    const sidePanel = document.getElementById('sidePanel');
+    resizer.addEventListener('mousedown', () => {
+      document.addEventListener('mousemove', resize);
+      document.addEventListener('mouseup', stopResize);
+    });
+    function resize(e) {
+      const newWidth = document.body.clientWidth - e.clientX;
+      if (newWidth > 240 && newWidth < 480) sidePanel.style.width = newWidth + 'px';
+    }
+    function stopResize() {
+      document.removeEventListener('mousemove', resize);
+      document.removeEventListener('mouseup', stopResize);
+    }
+    ['dragenter','dragover'].forEach(n => window.addEventListener(n, e => e.preventDefault()));
+    window.addEventListener('drop', e => { e.preventDefault(); });
+  </script>
+
+  <script src="./mapping-app.js"></script>
+</body>
+</html>
