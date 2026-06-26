@@ -1163,12 +1163,52 @@ function getHomography(src, dst) {
   return [h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7]];
 }
 
-function scanCurrentArea() {
+async function scanCurrentArea() {
   if (!bgImg.src) return;
-  if (typeof cv === 'undefined') {
-    alert("AI (OpenCV) 엔진이 아직 로드되지 않았습니다.");
-    return;
+
+  modeInfo.textContent = "AI 분석 중 (건물 면 감지)...";
+  scanButton.disabled = true;
+
+  const canvas = scanCanvas;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  canvas.width = bgImg.naturalWidth;
+  canvas.height = bgImg.naturalHeight;
+  ctx.drawImage(bgImg, 0, 0);
+
+  const base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+
+  try {
+    const res = await fetch('/api/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageBase64: base64, mimeType: 'image/jpeg' })
+    });
+
+    if (!res.ok) throw new Error('서버 오류: ' + res.status);
+    const data = await res.json();
+
+    if (!data.surfaces || data.surfaces.length === 0) {
+      modeInfo.textContent = "감지된 면이 없습니다. 다시 시도해주세요.";
+      return;
+    }
+
+    scanCandidates = data.surfaces.map(surface => ({
+      points: sortClockwise(surface.points),
+      score: surface.confidence,
+      label: surface.label
+    }));
+
+    candidateIndex = 0;
+    applyCandidate(0);
+    modeInfo.textContent = `${data.count}개 면 감지 완료. "다음 →" 버튼으로 전환`;
+
+  } catch(e) {
+    modeInfo.textContent = "감지 실패: " + e.message;
+    console.error(e);
+  } finally {
+    scanButton.disabled = false;
   }
+}
 
   modeInfo.textContent = "AI 분석 중 (건물 형태 추출)...";
   
@@ -1273,11 +1313,19 @@ function dist(a,b){
 function applyCandidate(index) {
   if (!scanCandidates.length) return;
   candidateIndex = index;
-  points = sortClockwise(scanCandidates[index].points);
+  const candidate = scanCandidates[index];
+  points = sortClockwise(candidate.points);
+  warpPoints = points;
+  mappingLayers[activeLayerIndex].warpPoints = points;
+  mappingLayers[activeLayerIndex].maskPoints = points.map(p => ({
+    x: p.x, y: p.y, hix: 0, hiy: 0, hox: 0, hoy: 0
+  }));
+  maskPoints = mappingLayers[activeLayerIndex].maskPoints;
   selectedPoint = -1;
   render();
   updateMappedArea();
-  modeInfo.textContent = `후보 ${index + 1}/${scanCandidates.length} 적용`;
+  const label = candidate.label || '';
+  modeInfo.textContent = `후보 ${index + 1}/${scanCandidates.length}: ${label}`;
 }
 
 function handleKeyMove(e) {
