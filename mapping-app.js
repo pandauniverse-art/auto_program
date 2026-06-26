@@ -1210,66 +1210,7 @@ async function scanCurrentArea() {
   }
 }
 
-  modeInfo.textContent = "AI 분석 중 (건물 형태 추출)...";
   
-  const canvas = scanCanvas;
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  canvas.width = bgImg.naturalWidth;
-  canvas.height = bgImg.naturalHeight;
-  ctx.drawImage(bgImg, 0, 0);
-
-  let src = cv.imread(canvas);
-  let gray = new cv.Mat();
-  let blurred = new cv.Mat();
-  let edges = new cv.Mat(); 
-  let contours = new cv.MatVector();
-  let hierarchy = new cv.Mat();
-
-  cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
-  cv.GaussianBlur(gray, blurred, new cv.Size(7, 7), 0, 0, cv.BORDER_DEFAULT);
-  
-  cv.Canny(blurred, edges, 20, 100);
-  cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-
-  scanCandidates = [];
-  candidateIndex = 0;
-
-  let maxArea = 0;
-  let maxCnt = null;
-  for (let i = 0; i < contours.size(); ++i) {
-    let cnt = contours.get(i);
-    let area = cv.contourArea(cnt);
-    if (area > maxArea && area > 5000) { 
-      maxArea = area;
-      maxCnt = cnt;
-    }
-  }
-
-  if (maxCnt) {
-    let rect = cv.minAreaRect(maxCnt);
-    let vertices = cv.RotatedRect.points(rect);
-    
-    let pts = [
-        {x: vertices[0].x, y: vertices[0].y},
-        {x: vertices[1].x, y: vertices[1].y},
-        {x: vertices[2].x, y: vertices[2].y},
-        {x: vertices[3].x, y: vertices[3].y}
-    ];
-
-    scanCandidates.push({ points: pts, score: 100 });
-  }
-
-  if (scanCandidates.length > 0) {
-    applyCandidate(0);
-    modeInfo.textContent = `건물 외곽선 스캔 완료`;
-  } else {
-    modeInfo.textContent = "스캔 실패: 건물 형태를 찾을 수 없습니다.";
-  }
-
-  src.delete(); gray.delete(); blurred.delete(); edges.delete(); contours.delete(); hierarchy.delete();
-  render();
-  updateMappedArea();
-}
 
 function contourToPoints(cnt, offsetX = 0, offsetY = 0) {
   const pts = [];
